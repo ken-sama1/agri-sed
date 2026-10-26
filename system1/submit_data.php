@@ -19,7 +19,7 @@ $profit = $_POST['profit'] ?? '';
 if (!is_string($location) ||
     !in_array($location, ['Munoz', 'Cabanatuan', 'San Jose'], true) ||
     !is_string($crop) ||
-    !in_array($crop, ['Rice', 'Onion', 'Sugar'], true) ||
+    !in_array($crop, ['Rice', 'Onion', 'Sugarcane'], true) ||
     !is_string($wUnit) ||
     !in_array($wUnit, ['KG', 'LB'], true) ||
     !is_string($lUnit) ||

@@ -1,3 +1,11 @@
+:root {
+  --primary: #10b981;
+  --onion: #a855f7;
+  --sugarcane: #f59e0b;
+  --danger: #ef4444;
+  --danger-dark: #991b1b;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -5,7 +13,7 @@
   font-family: "Segoe UI", Arial, sans-serif;
 }
 body {
-  background: #000;
+  background: #050807;
   color: white;
   min-height: 100vh;
 }
@@ -25,7 +33,7 @@ body {
   overflow: hidden;
   background: radial-gradient(
     ellipse at 50% 0%,
-    #17210a 0%,
+    #022c22 0%,
     #080a06 42%,
     #000 78%
   );
@@ -35,7 +43,7 @@ body {
   position: absolute;
   width: 340px;
   height: 340px;
-  border: 1px solid #b5ff0012;
+  border: 1px solid #10b98120;
   border-radius: 50%;
   content: "";
   pointer-events: none;
@@ -52,7 +60,7 @@ body {
 }
 .logo-pill {
   background: #151515;
-  color: #b5ff00;
+  color: var(--primary);
   display: inline-block;
   padding: 10px 20px;
   border-radius: 50px;
@@ -93,13 +101,13 @@ body {
   color: #777;
 }
 .role-btn.active-admin {
-  background: #24110f;
-  border-color: #8d3028;
+  background: #292018;
+  border-color: #92400e;
   color: #fff;
 }
 .role-btn.active {
-  background: #1b2410;
-  border-color: #566e19;
+  background: #064e3b;
+  border-color: #047857;
   color: #f5ffe2;
 }
 .auth-box {
@@ -121,7 +129,7 @@ body {
 }
 .auth-eyebrow {
   margin-top: 24px;
-  color: #b5ff00;
+  color: var(--primary);
   font-size: 10px;
   letter-spacing: 0.18em;
   font-weight: 700;
@@ -148,8 +156,8 @@ body {
 .input-group input {
   width: 100%;
   padding: 14px;
-  background: #171a14;
-  border: 1px solid #30352b;
+  background: #111a17;
+  border: 1px solid #25352f;
   border-radius: 10px;
   color: #f2f5ed;
   outline: none;
@@ -158,11 +166,11 @@ body {
     box-shadow 0.2s;
 }
 .input-group input:focus {
-  border-color: #8bab30;
-  box-shadow: 0 0 0 3px #b5ff001a;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px #10b9811a;
 }
 .input-group input::placeholder {
-  color: #70756b;
+  color: #8a9991;
   font-weight: 400;
 }
 .auth-footer {
@@ -181,14 +189,14 @@ body {
   transition: 0.2s;
 }
 .btn-signup {
-  background: #b5ff00;
+  background: var(--primary);
   color: #000;
-  border: 1px solid #b5ff00;
+  border: 1px solid var(--primary);
 }
 .btn-login {
-  background: #171a14;
+  background: #111a17;
   color: white;
-  border: 1px solid #34392f;
+  border: 1px solid #2b3d35;
 }
 .btn-signup:hover,
 .btn-login:hover {
@@ -216,7 +224,7 @@ body {
   justify-content: space-between;
 }
 .logo {
-  color: #b5ff00;
+  color: var(--primary);
 }
 .nav-menu {
   display: flex;
@@ -231,7 +239,7 @@ body {
   cursor: pointer;
 }
 .nav-menu button:hover {
-  color: #b5ff00;
+  color: var(--primary);
 }
 .dropdown {
   position: relative;
@@ -259,7 +267,7 @@ body {
 }
 .dropdown-content a:hover {
   background: #292929;
-  color: #b5ff00;
+  color: var(--primary);
 }
 
 /* GENERAL */
@@ -270,14 +278,14 @@ body {
   margin: auto;
 }
 .title {
-  color: #b5ff00;
+  color: var(--primary);
   text-align: center;
   margin: 40px 0;
   font-size: 32px;
 }
 .highlight {
-  color: #b5ff00;
-  text-shadow: 0 0 10px rgba(181, 255, 0, 0.5);
+  color: var(--primary);
+  text-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
 }
 
 /* USER HOME */
@@ -307,7 +315,7 @@ body {
   margin-top: 30px;
 }
 .btn-main {
-  background: #b5ff00;
+  background: var(--primary);
   color: black;
   border: none;
   padding: 15px 25px;
@@ -319,7 +327,7 @@ body {
 .btn-sub {
   background: transparent;
   color: white;
-  border: 1px solid #b5ff00;
+  border: 1px solid var(--primary);
   padding: 15px 25px;
   border-radius: 30px;
   cursor: pointer;
@@ -330,7 +338,7 @@ body {
   transform: translateY(-3px);
 }
 .btn-sub:hover {
-  background: rgba(181, 255, 0, 0.1);
+  background: rgba(16, 185, 129, 0.1);
   transform: translateY(-3px);
 }
 .feature-box {
@@ -355,7 +363,7 @@ body {
   cursor: pointer;
 }
 .feature:hover {
-  border-color: #b5ff00;
+  border-color: var(--primary);
   transform: scale(1.05);
 }
 .feature .icon {
@@ -389,7 +397,7 @@ body {
 }
 .crop-card h2 {
   text-align: center;
-  background: #62a91c;
+  background: #047857;
   padding: 10px;
   margin-bottom: 20px;
   border-radius: 5px;
@@ -419,7 +427,7 @@ body {
   padding: 12px;
   border: none;
   border-radius: 6px;
-  background: #b5ff00;
+  background: var(--primary);
   color: #000;
   font-weight: bold;
   cursor: pointer;
@@ -447,17 +455,17 @@ body {
   z-index: 1000;
   max-width: min(420px, calc(100vw - 32px));
   padding: 14px 18px;
-  border: 1px solid #b5ff00;
+  border: 1px solid var(--primary);
   border-radius: 10px;
   background: #151515;
   color: white;
   box-shadow: 0 8px 28px #0009;
 }
 .submission-toast.is-success {
-  border-color: #b5ff00;
+  border-color: var(--primary);
 }
 .submission-toast.is-error {
-  border-color: #ff6b6b;
+  border-color: var(--danger);
 }
 @keyframes upload-spinner {
   to {
@@ -483,7 +491,7 @@ body {
   transition: 0.3s;
 }
 .stat-card:hover {
-  border-color: #b5ff00;
+  border-color: var(--primary);
   transform: translateY(-5px);
 }
 .stat-icon {
@@ -493,7 +501,7 @@ body {
 }
 .stat-card h3 {
   font-size: 32px;
-  color: #b5ff00;
+  color: var(--primary);
   margin-bottom: 5px;
 }
 .stat-card p {
@@ -502,8 +510,8 @@ body {
   text-transform: uppercase;
 }
 .highlight-card {
-  background: rgba(181, 255, 0, 0.05);
-  border: 1px solid #b5ff00;
+  background: rgba(16, 185, 129, 0.05);
+  border: 1px solid var(--primary);
 }
 .admin-actions {
   display: flex;
@@ -582,16 +590,16 @@ body {
   color: #ddd;
 }
 .submission-summary .status-approved {
-  color: #b5ff00;
+  color: var(--primary);
 }
 .submission-summary .status-pending {
-  color: #ffd166;
+  color: var(--sugarcane);
 }
 .submission-summary .status-rejected {
-  color: #ff6666;
+  color: var(--danger);
 }
 .submission-summary .status-paused {
-  color: #ffd166;
+  color: var(--sugarcane);
 }
 .submission-summary .status-cancelled {
   color: #999;
@@ -603,7 +611,7 @@ body {
   font-size: 13px;
 }
 .history-card p {
-  color: #b5ff00;
+  color: var(--primary);
   font-size: 24px;
   margin-top: 20px;
 }
@@ -622,35 +630,35 @@ body {
   color: #aaa;
 }
 .history-details dd {
-  color: #b5ff00;
+  color: var(--primary);
   text-align: right;
 }
 .history-details .status-approved {
-  color: #b5ff00;
+  color: var(--primary);
 }
 .history-details .status-pending {
-  color: #ffd166;
+  color: var(--sugarcane);
 }
 .history-details .status-rejected {
-  color: #ff6666;
+  color: var(--danger);
 }
 .history-details .status-accepted {
-  color: #b5ff00;
+  color: var(--primary);
 }
 .history-details .status-denied {
-  color: #ff6666;
+  color: var(--danger);
 }
 .history-details .status-paused {
-  color: #ffd166;
+  color: var(--sugarcane);
 }
 .history-details .status-cancelled {
   color: #999;
 }
 .history-details .status-open {
-  color: #ffd166;
+  color: var(--sugarcane);
 }
 .history-details .status-resolved {
-  color: #b5ff00;
+  color: var(--primary);
 }
 .history-empty {
   grid-column: 1 / -1;
@@ -665,7 +673,7 @@ body {
   margin-top: 18px;
 }
 .submission-files a {
-  color: #b5ff00;
+  color: var(--primary);
 }
 .submission-actions button {
   padding: 10px 16px;
@@ -675,15 +683,15 @@ body {
   cursor: pointer;
 }
 .btn-approve {
-  background: #b5ff00;
+  background: var(--primary);
   color: #000;
 }
 .btn-reject {
-  background: #ff6666;
+  background: var(--danger);
   color: #000;
 }
 .btn-delete {
-  background: #8f1d1d;
+  background: var(--danger-dark);
   color: #fff;
 }
 .appeal-form {
@@ -693,7 +701,7 @@ body {
   text-align: left;
 }
 .appeal-form label {
-  color: #ffd166;
+  color: var(--sugarcane);
   font-weight: bold;
 }
 .appeal-form textarea {
@@ -710,7 +718,7 @@ body {
   padding: 10px 16px;
   border: 0;
   border-radius: 6px;
-  background: #ffd166;
+  background: var(--sugarcane);
   color: #000;
   font-weight: bold;
   cursor: pointer;
@@ -722,10 +730,10 @@ body {
   display: inline-block;
   margin-top: 18px;
   padding: 10px 16px;
-  border: 1px solid #b5ff00;
+  border: 1px solid var(--primary);
   border-radius: 6px;
   background: transparent;
-  color: #b5ff00;
+  color: var(--primary);
   font-weight: bold;
   text-decoration: none;
   cursor: pointer;
@@ -773,7 +781,7 @@ body {
   background: #151515;
 }
 .submission-detail-card > h2 {
-  color: #b5ff00;
+  color: var(--primary);
 }
 .submission-detail-card > h3 {
   margin-top: 28px;
@@ -826,7 +834,7 @@ body {
   gap: 12px;
 }
 .password-reset-dialog h2 {
-  color: #b5ff00;
+  color: var(--primary);
 }
 .password-reset-dialog p {
   color: #aaa;
@@ -860,7 +868,7 @@ body {
   text-decoration: none;
 }
 .nav-link-button:hover {
-  color: #b5ff00;
+  color: var(--primary);
 }
 .report-attachment {
   display: block;
@@ -886,7 +894,7 @@ body {
   cursor: pointer;
 }
 .home-btn:hover {
-  background: #b5ff00;
+  background: var(--primary);
   color: black;
 }
 
@@ -901,7 +909,7 @@ body {
 }
 .unit-row select {
   flex: 1;
-  background: #b5ff00;
+  background: var(--primary);
   color: #000;
   border-radius: 6px;
   font-weight: bold;

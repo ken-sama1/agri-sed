@@ -650,6 +650,7 @@ function renderBenchmarkPie(data) {
   const values = data.locations.map(
     (location) => data.totals[location][crop][metric],
   );
+  const palette = getComputedStyle(document.documentElement);
 
   title.textContent = `${crop} ${metricLabels[metric].toLowerCase()} by area`;
   if (window.benchmarkCharts?.pie) window.benchmarkCharts.pie.destroy();
@@ -662,7 +663,11 @@ function renderBenchmarkPie(data) {
         {
           label: `${crop} ${metricLabels[metric]}`,
           data: values,
-          backgroundColor: ["#ae72ed", "#54c8bd", "#ffb47f"],
+          backgroundColor: [
+            palette.getPropertyValue("--primary").trim(),
+            palette.getPropertyValue("--onion").trim(),
+            palette.getPropertyValue("--sugarcane").trim(),
+          ],
           borderColor: "#111",
           borderWidth: 4,
         },
@@ -717,10 +722,11 @@ async function loadBenchmarkCharts() {
     );
 
     const crops = data.crops;
+    const palette = getComputedStyle(document.documentElement);
     const cropColors = {
-      Rice: "#ffb47f",
-      Onion: "#54c8bd",
-      Sugar: "#ae72ed",
+      Rice: palette.getPropertyValue("--primary").trim(),
+      Onion: palette.getPropertyValue("--onion").trim(),
+      Sugarcane: palette.getPropertyValue("--sugarcane").trim(),
     };
     window.benchmarkCharts = window.benchmarkCharts || {};
     window.benchmarkCharts.bar = new Chart(barCanvas, {

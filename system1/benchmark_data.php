@@ -23,7 +23,7 @@ if (!$result) {
 }
 
 $locations = ['Munoz', 'Cabanatuan', 'San Jose'];
-$crops = ['Rice', 'Onion', 'Sugar'];
+$crops = ['Rice', 'Onion', 'Sugarcane'];
 $totals = [];
 foreach ($locations as $location) {
     foreach ($crops as $crop) {

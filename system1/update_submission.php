@@ -25,7 +25,7 @@ $profit = $_POST['profit'] ?? '';
 
 if (!$submissionId ||
     !is_string($location) || !in_array($location, ['Munoz', 'Cabanatuan', 'San Jose'], true) ||
-    !is_string($crop) || !in_array($crop, ['Rice', 'Onion', 'Sugar'], true) ||
+    !is_string($crop) || !in_array($crop, ['Rice', 'Onion', 'Sugarcane'], true) ||
     !is_string($weightUnit) || !in_array($weightUnit, ['KG', 'LB'], true) ||
     !is_string($landUnit) || !in_array($landUnit, ['Hectares', 'Acres', 'SqMeters', 'SqFeet'], true) ||
     !is_string($sacks) || !preg_match('/^\d{1,10}$/', $sacks) ||

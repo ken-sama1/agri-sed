@@ -62,7 +62,7 @@ if (!$submission) {
                 </select>
                 <label for="edit-crop">Crop type</label>
                 <select id="edit-crop" name="crop_type" required>
-                    <?php foreach (['Rice', 'Onion', 'Sugar'] as $crop): ?>
+                    <?php foreach (['Rice', 'Onion', 'Sugarcane'] as $crop): ?>
                         <option value="<?= $crop ?>" <?= $submission['crop_type'] === $crop ? 'selected' : '' ?>><?= $crop ?></option>
                     <?php endforeach; ?>
                 </select>

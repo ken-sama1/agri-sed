@@ -12,6 +12,9 @@ Existing installations should also apply
 [`system1/migrations/20261026_add_cancelled_submission_status.sql`](system1/migrations/20261026_add_cancelled_submission_status.sql)
 to enable farmers to cancel pending submissions.
 
+To rename existing `Sugar` submissions to `Sugarcane`, apply
+[`system1/migrations/20261027_rename_sugar_to_sugarcane.sql`](system1/migrations/20261027_rename_sugar_to_sugarcane.sql).
+
 The PHP app currently connects to MySQL using the settings in
 [`system1/db.php`](system1/db.php). Update those settings to match the host's
 database credentials before deployment, and configure PHP to persist uploaded

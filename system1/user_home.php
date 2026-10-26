@@ -100,7 +100,7 @@ $reportResult = $reportStmt->get_result();
                     <select name="location" id="location" class="input-field"><option value="Munoz">Munoz</option><option value="Cabanatuan">Cabanatuan</option><option value="San Jose">San Jose</option></select>
                     <label>Crop Type</label>
             <select name="crop_type" id="crop_type"  class="input-field">
-              <option value="Rice">Rice</option><option value="Onion">Onion</option><option value="Sugar">Sugar</option></select>
+              <option value="Rice">Rice</option><option value="Onion">Onion</option><option value="Sugarcane">Sugarcane</option></select>
                     <label for="sacks">Sacks</label><input type="number" id="sacks" name="sacks" min="0" step="1" required>
                     <label>Total Weight</label>
             <div class="unit-row">
@@ -200,7 +200,7 @@ $reportResult = $reportStmt->get_result();
                         <select id="userBenchmarkCrop" class="input-field">
                             <option value="Rice">Rice</option>
                             <option value="Onion">Onion</option>
-                            <option value="Sugar">Sugar</option>
+                            <option value="Sugarcane">Sugarcane</option>
                         </select>
                         <label for="userBenchmarkMetric">Total</label>
                         <select id="userBenchmarkMetric" class="input-field">

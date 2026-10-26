@@ -119,7 +119,7 @@ if (!$reportResult) {
                         <select id="adminBenchmarkCrop" class="input-field">
                             <option value="Rice">Rice</option>
                             <option value="Onion">Onion</option>
-                            <option value="Sugar">Sugar</option>
+                            <option value="Sugarcane">Sugarcane</option>
                         </select>
                         <label for="adminBenchmarkMetric">Total</label>
                         <select id="adminBenchmarkMetric" class="input-field">

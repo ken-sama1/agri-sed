@@ -18,7 +18,7 @@ CREATE TABLE farmer_submissions (
     id INT(11) NOT NULL AUTO_INCREMENT,
     user_id INT(11) NOT NULL,
     location VARCHAR(100) NOT NULL,
-    crop_type VARCHAR(100) NOT NULL,
+    crop_type ENUM('Rice', 'Onion', 'Sugarcane') NOT NULL,
     sacks INT(11) NOT NULL DEFAULT 0,
     weight DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     weight_unit ENUM('KG', 'LB') NOT NULL,
