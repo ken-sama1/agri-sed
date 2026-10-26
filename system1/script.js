@@ -32,8 +32,27 @@ function setRole(role) {
 function validatePassword(pass) {
   return /^(?=(?:[^A-Za-z]*[A-Za-z]){6})(?=.*[0-9]).{8,}$/.test(pass);
 }
+function validateUsername(username) {
+  return /^[\p{L} ]{3,30}$/u.test(username.trim());
+}
 function validateWorkerId(id) {
   return /^\d{2}-\d{4}-\d{6}$/.test(id);
+}
+function showSubmissionToast(message, type) {
+  let toast = document.getElementById("submission-toast");
+  if (!toast) {
+    toast = document.createElement("div");
+    toast.id = "submission-toast";
+    toast.className = "submission-toast";
+    toast.setAttribute("aria-live", "polite");
+    document.body.append(toast);
+  }
+
+  toast.textContent = message;
+  toast.className = `submission-toast is-${type}`;
+  toast.setAttribute("role", type === "success" ? "status" : "alert");
+  window.clearTimeout(showSubmissionToast.timeoutId);
+  showSubmissionToast.timeoutId = window.setTimeout(() => toast.remove(), 5000);
 }
 
 async function handleSignup() {
@@ -46,6 +65,10 @@ async function handleSignup() {
 
   if (!user || !pass) {
     alert("Fill all fields.");
+    return;
+  }
+  if (!validateUsername(user)) {
+    alert("Username must be 3–30 characters and contain only letters and spaces.");
     return;
   }
   if (pass !== confirmPass) {
@@ -84,8 +107,13 @@ async function handleSignup() {
 }
 
 async function handleLogin() {
-  const user = document.getElementById("username").value;
+  const user = document.getElementById("username").value.trim();
   const pass = document.getElementById("password").value;
+
+  if (!validateUsername(user)) {
+    alert("Username must be 3–30 characters and contain only letters and spaces.");
+    return;
+  }
 
   const formData = new FormData();
   formData.append("username", user);
@@ -152,7 +180,30 @@ function convertLand() {
   if (!val) return;
 }
 
-async function submitFarmerData() {
+async function submitFarmerData(event) {
+  event.preventDefault();
+  const form = document.getElementById("farmer-submission-form");
+  const allowedTypes = [
+    "image/jpeg",
+    "image/png",
+    "image/gif",
+    "image/webp",
+    "application/pdf",
+  ];
+  const requiredFiles = ["file_land", "file_crop", "file_payslip"].map((id) =>
+    document.getElementById(id).files[0],
+  );
+  if (
+    requiredFiles.some((file) => !file || !allowedTypes.includes(file.type))
+  ) {
+    showSubmissionToast(
+      "Choose an image or PDF for the land picture, crop photo, and payslip.",
+      "error",
+    );
+    return;
+  }
+  const submitButton = form.querySelector('button[type="submit"]');
+
   const formData = new FormData();
   formData.append("location", document.getElementById("location").value);
   formData.append("crop_type", document.getElementById("crop_type").value);
@@ -169,19 +220,27 @@ async function submitFarmerData() {
     document.getElementById("file_payslip").files[0],
   );
 
+  submitButton.disabled = true;
+  submitButton.classList.add("is-loading");
+  submitButton.textContent = "Uploading…";
   try {
     const response = await fetch("submit_data.php", {
       method: "POST",
       body: formData,
     });
     const result = await response.text();
-    alert(
-      result.trim() === "Success"
-        ? "Data Submitted Successfully!"
-        : "Error: " + result,
-    );
+    if (response.ok && result.trim() === "Success") {
+      form.reset();
+      showSubmissionToast("Submission uploaded successfully.", "success");
+    } else {
+      showSubmissionToast(result || "Unable to submit data.", "error");
+    }
   } catch (error) {
-    alert("Connection error: " + error);
+    showSubmissionToast(`Connection error: ${error.message}`, "error");
+  } finally {
+    submitButton.disabled = false;
+    submitButton.classList.remove("is-loading");
+    submitButton.textContent = "SUBMIT DATA";
   }
 }
 
@@ -212,6 +271,7 @@ async function updateSubmission(event, submissionId) {
     if (!response.ok) {
       throw new Error(result.error || "Unable to update submission.");
     }
+    form.reset();
     window.location.href = "user_home.php?section=history";
   } catch (error) {
     alert(`Error: ${error.message}`);
@@ -323,6 +383,7 @@ async function submitAppeal(submissionId) {
     if (!response.ok) {
       throw new Error(result.error || "Unable to submit appeal.");
     }
+    messageField.value = "";
     alert("Appeal submitted for admin review.");
     window.location.reload();
   } catch (error) {
@@ -372,6 +433,9 @@ async function submitUserReport() {
     const result = await response.json();
     if (!response.ok)
       throw new Error(result.error || "Unable to submit report.");
+    document.getElementById("reportMessage").value = "";
+    document.getElementById("reportAttachment").value = "";
+    document.getElementById("reportCategory").selectedIndex = 0;
     alert("Your report was submitted.");
     window.location.reload();
   } catch (error) {

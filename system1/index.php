@@ -15,7 +15,7 @@
         <div class="auth-box">
             <h2 id="authTitle">Farmer Registration</h2>
             <div class="input-group">
-                <input type="text" id="username" placeholder="USERNAME">
+                <input type="text" id="username" placeholder="USERNAME" minlength="3" maxlength="30" pattern="[\p{L} ]{3,30}" title="Use 3–30 letters and spaces only.">
                 <input type="text" id="workerId" class="hidden" placeholder="WORKER ID (00-0000-000000)">
                 <input type="password" id="password" placeholder="PASSWORD" minlength="8" pattern="(?=(?:[^A-Za-z]*[A-Za-z]){6})(?=.*[0-9]).{8,}" title="At least 8 characters, including 6 letters and 1 number.">
                 <input type="password" id="confirmPassword" placeholder="CONFIRM PASSWORD">

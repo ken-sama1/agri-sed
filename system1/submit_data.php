@@ -23,26 +23,56 @@ if (!in_array($location, ['Munoz', 'Cabanatuan', 'San Jose'], true) ||
     die("Invalid form values.");
 }
 
-// Initialize optional file paths
-$targetDir = "uploads/";
+// Require and validate all evidence files before creating the submission.
+$targetDir = __DIR__ . "/uploads/";
+$allowedFileTypes = [
+    'image/jpeg' => 'jpg',
+    'image/png' => 'png',
+    'image/gif' => 'gif',
+    'image/webp' => 'webp',
+    'application/pdf' => 'pdf',
+];
 $files = ['file_land', 'file_crop', 'file_payslip'];
 $paths = [
     'file_land' => null,
     'file_crop' => null,
     'file_payslip' => null
 ];
-
-foreach ($files as $f) {
-    if (isset($_FILES[$f]) &&
-        $_FILES[$f]['error'] === UPLOAD_ERR_OK) {
-
-        $fileName = time() . "_" . basename($_FILES[$f]["name"]);
-        $targetFilePath = $targetDir . $fileName;
-
-        if (move_uploaded_file($_FILES[$f]["tmp_name"], $targetFilePath)) {
-            $paths[$f] = $targetFilePath;
+$removeUploadedFiles = static function (array $uploadedPaths): void {
+    foreach ($uploadedPaths as $path) {
+        if ($path !== null) {
+            unlink(__DIR__ . '/' . $path);
         }
     }
+};
+$fileInfo = new finfo(FILEINFO_MIME_TYPE);
+
+foreach ($files as $f) {
+    if (!isset($_FILES[$f]) || $_FILES[$f]['error'] !== UPLOAD_ERR_OK) {
+        $removeUploadedFiles($paths);
+        http_response_code(400);
+        exit("Upload a picture of land, crop photo, and payslip as images or PDFs.");
+    }
+
+    $mimeType = $fileInfo->file($_FILES[$f]['tmp_name']);
+    $isValidImage = str_starts_with((string) $mimeType, 'image/') &&
+        @getimagesize($_FILES[$f]['tmp_name']) !== false;
+    $isValidPdf = $mimeType === 'application/pdf' &&
+        file_get_contents($_FILES[$f]['tmp_name'], false, null, 0, 5) === '%PDF-';
+    if (!isset($allowedFileTypes[$mimeType]) || (!$isValidImage && !$isValidPdf)) {
+        $removeUploadedFiles($paths);
+        http_response_code(400);
+        exit("All submission attachments must be valid JPG, PNG, GIF, WebP, or PDF files.");
+    }
+
+    $fileName = bin2hex(random_bytes(16)) . '.' . $allowedFileTypes[$mimeType];
+    $targetFilePath = $targetDir . $fileName;
+    if (!move_uploaded_file($_FILES[$f]['tmp_name'], $targetFilePath)) {
+        $removeUploadedFiles($paths);
+        http_response_code(500);
+        exit("Unable to save submission files.");
+    }
+    $paths[$f] = "uploads/" . $fileName;
 }
 
 $sql = "INSERT INTO farmer_submissions
@@ -53,6 +83,7 @@ $sql = "INSERT INTO farmer_submissions
 $stmt = $conn->prepare($sql);
 
 if (!$stmt) {
+    $removeUploadedFiles($paths);
     die("Prepare failed: " . $conn->error);
 }
 
@@ -75,6 +106,7 @@ $stmt->bind_param(
 if ($stmt->execute()) {
     echo "Success";
 } else {
+    $removeUploadedFiles($paths);
     echo "Error: " . $stmt->error;
 }
 

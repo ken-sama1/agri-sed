@@ -64,6 +64,12 @@ body { background: #000; color: white; min-height: 100vh; }
 .crop-card input, .crop-card select, .crop-card textarea { width: 100%; padding: 12px; border: none; border-radius: 6px; background: #292929; color: white; }
 .crop-card textarea { resize: vertical; }
 .crop-card button { width: 100%; margin-top: 20px; padding: 12px; border: none; border-radius: 6px; background: #b5ff00; color: #000; font-weight: bold; cursor: pointer; }
+.crop-card button:disabled { cursor: wait; opacity: 0.75; }
+.crop-card button.is-loading::after { content: ""; display: inline-block; width: 14px; height: 14px; margin-left: 10px; vertical-align: -2px; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: upload-spinner 0.7s linear infinite; }
+.submission-toast { position: fixed; right: 24px; bottom: 24px; z-index: 1000; max-width: min(420px, calc(100vw - 32px)); padding: 14px 18px; border: 1px solid #b5ff00; border-radius: 10px; background: #151515; color: white; box-shadow: 0 8px 28px #0009; }
+.submission-toast.is-success { border-color: #b5ff00; }
+.submission-toast.is-error { border-color: #ff6b6b; }
+@keyframes upload-spinner { to { transform: rotate(360deg); } }
 
 /* ADMIN DASHBOARD */
 .admin-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 40px auto; width: 92%; max-width: 1200px; }

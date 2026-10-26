@@ -93,7 +93,7 @@ $reportResult = $reportStmt->get_result();
         <section id="input" class="section hidden">
             <h1 class="title">START DATA ENTRY</h1>
             <div class="centered-form">
-                <div class="crop-card">
+                <form id="farmer-submission-form" class="crop-card" onsubmit="submitFarmerData(event)">
                     <label>Location</label>
                     <select name="location" id="location" class="input-field"><option value="Munoz">Munoz</option><option value="Cabanatuan">Cabanatuan</option><option value="San Jose">San Jose</option></select>
                     <label>Crop Type</label>
@@ -107,11 +107,11 @@ $reportResult = $reportStmt->get_result();
                     <label>Land Size</label>
                     <div class="unit-row"><input type="number" name="landSize" id="landSize"><select id="landUnit" name="landUnit" onchange="convertLand()"><option value="Hectares">Hectares</option><option value="Acres">Acres</option><option value="SqMeters">SqMeters</option><option value="SqFeet">SqFeet</option></select></div>
                     <label>Earned Profit (₱)</label><input type="number" id="profit" name="profit">
-                    <label>Upload Land Title</label><input type="file" id="file_land" name="file_land">
-                    <label>Upload Crop Photo</label><input type="file" id="file_crop" name="file_crop">
-                    <label>Upload Payslip</label><input type="file" id="file_payslip" name="file_payslip">
-                    <button class="btn-main" onclick="submitFarmerData()">SUBMIT DATA</button>
-                </div>
+                    <label for="file_land">Upload Picture of Land (image or PDF required)</label><input type="file" id="file_land" name="file_land" accept="image/jpeg,image/png,image/gif,image/webp,application/pdf" required>
+                    <label for="file_crop">Upload Crop Photo (image or PDF required)</label><input type="file" id="file_crop" name="file_crop" accept="image/jpeg,image/png,image/gif,image/webp,application/pdf" required>
+                    <label for="file_payslip">Upload Payslip (image or PDF required)</label><input type="file" id="file_payslip" name="file_payslip" accept="image/jpeg,image/png,image/gif,image/webp,application/pdf" required>
+                    <button class="btn-main" type="submit">SUBMIT DATA</button>
+                </form>
             </div>
         </section>
 
