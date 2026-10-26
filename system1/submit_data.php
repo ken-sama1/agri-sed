@@ -8,18 +8,27 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'user') {
 $userId = $_SESSION['user_id'];
 $location = $_POST['location'] ?? '';
 $crop = $_POST['crop_type'] ?? '';
-$sacks = $_POST['sacks'] ?? 0;
-$weight = $_POST['weight'] ?? 0;
+$sacks = $_POST['sacks'] ?? '';
+$weight = $_POST['weight'] ?? '';
 $wUnit = $_POST['weightUnit'] ?? '';
-$land = $_POST['landSize'] ?? 0;
+$land = $_POST['landSize'] ?? '';
 $lUnit = $_POST['landUnit'] ?? '';
-$profit = $_POST['profit'] ?? 0;
+$profit = $_POST['profit'] ?? '';
 
 // Validate allowed enum values
-if (!in_array($location, ['Munoz', 'Cabanatuan', 'San Jose'], true) ||
+if (!is_string($location) ||
+    !in_array($location, ['Munoz', 'Cabanatuan', 'San Jose'], true) ||
+    !is_string($crop) ||
     !in_array($crop, ['Rice', 'Onion', 'Sugar'], true) ||
+    !is_string($wUnit) ||
     !in_array($wUnit, ['KG', 'LB'], true) ||
+    !is_string($lUnit) ||
+    !is_string($sacks) || !preg_match('/^\d{1,10}$/', $sacks) ||
+    !is_string($weight) || !preg_match('/^\d{1,8}(?:\.\d{1,2})?$/', $weight) ||
+    !is_string($land) || !preg_match('/^\d{1,8}(?:\.\d{1,2})?$/', $land) ||
+    !is_string($profit) || !preg_match('/^\d{1,13}(?:\.\d{1,2})?$/', $profit) ||
     !in_array($lUnit, ['Hectares', 'Acres', 'SqMeters', 'SqFeet'], true)) {
+    http_response_code(400);
     die("Invalid form values.");
 }
 

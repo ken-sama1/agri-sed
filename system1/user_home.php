@@ -99,14 +99,14 @@ $reportResult = $reportStmt->get_result();
                     <label>Crop Type</label>
             <select name="crop_type" id="crop_type"  class="input-field">
               <option value="Rice">Rice</option><option value="Onion">Onion</option><option value="Sugar">Sugar</option></select>
-                    <label>Sacks</label><input type="number" id="sacks" name="sacks">
+                    <label for="sacks">Sacks</label><input type="number" id="sacks" name="sacks" min="0" step="1" required>
                     <label>Total Weight</label>
             <div class="unit-row">
-              <input type="number" name="weight" id="weight">
+              <input type="number" name="weight" id="weight" min="0" step="0.01" required>
               <select id="weightUnit" name="weight"  onchange="convertWeight()"><option value="KG">KG</option><option value="LB">LB</option></select></div>
                     <label>Land Size</label>
-                    <div class="unit-row"><input type="number" name="landSize" id="landSize"><select id="landUnit" name="landUnit" onchange="convertLand()"><option value="Hectares">Hectares</option><option value="Acres">Acres</option><option value="SqMeters">SqMeters</option><option value="SqFeet">SqFeet</option></select></div>
-                    <label>Earned Profit (₱)</label><input type="number" id="profit" name="profit">
+                    <div class="unit-row"><input type="number" name="landSize" id="landSize" min="0" step="0.01" required><select id="landUnit" name="landUnit" onchange="convertLand()"><option value="Hectares">Hectares</option><option value="Acres">Acres</option><option value="SqMeters">SqMeters</option><option value="SqFeet">SqFeet</option></select></div>
+                    <label for="profit">Earned Profit (₱)</label><input type="number" id="profit" name="profit" min="0" step="0.01" required>
                     <label for="file_land">Upload Picture of Land (image or PDF required)</label><input type="file" id="file_land" name="file_land" accept="image/jpeg,image/png,image/gif,image/webp,application/pdf" required>
                     <label for="file_crop">Upload Crop Photo (image or PDF required)</label><input type="file" id="file_crop" name="file_crop" accept="image/jpeg,image/png,image/gif,image/webp,application/pdf" required>
                     <label for="file_payslip">Upload Payslip (image or PDF required)</label><input type="file" id="file_payslip" name="file_payslip" accept="image/jpeg,image/png,image/gif,image/webp,application/pdf" required>
@@ -170,39 +170,14 @@ $reportResult = $reportStmt->get_result();
                     <?php while ($submission = $historyResult->fetch_assoc()): ?>
                         <article class="history-card">
                             <h2><?= htmlspecialchars($submission['crop_type'], ENT_QUOTES, 'UTF-8') ?> submission</h2>
-                            <dl class="history-details">
-                                <div><dt>Submitted</dt><dd><?= $submission['submitted_at'] ? htmlspecialchars(date('M j, Y g:i A', strtotime($submission['submitted_at'])), ENT_QUOTES, 'UTF-8') : 'Not available' ?></dd></div>
-                                <div><dt>Status</dt><dd class="status-<?= (int) $submission['is_paused'] === 1 ? 'paused' : htmlspecialchars($submission['status'] ?? 'pending', ENT_QUOTES, 'UTF-8') ?>"><?= (int) $submission['is_paused'] === 1 ? 'Approved (paused)' : htmlspecialchars(ucfirst($submission['status'] ?? 'pending'), ENT_QUOTES, 'UTF-8') ?></dd></div>
-                                <div><dt>Reviewed</dt><dd><?= $submission['reviewed_at'] ? htmlspecialchars(date('M j, Y g:i A', strtotime($submission['reviewed_at'])), ENT_QUOTES, 'UTF-8') : 'Not reviewed' ?></dd></div>
-                                <?php if ($submission['appeal_status']): ?>
-                                    <div><dt>Appeal status</dt><dd class="status-<?= htmlspecialchars($submission['appeal_status'], ENT_QUOTES, 'UTF-8') ?>"><?= htmlspecialchars(ucfirst($submission['appeal_status']), ENT_QUOTES, 'UTF-8') ?></dd></div>
-                                    <div><dt>Appeal submitted</dt><dd><?= htmlspecialchars(date('M j, Y g:i A', strtotime($submission['appeal_submitted_at'])), ENT_QUOTES, 'UTF-8') ?></dd></div>
-                                    <?php if ($submission['appeal_reviewed_at']): ?>
-                                        <div><dt>Appeal reviewed</dt><dd><?= htmlspecialchars(date('M j, Y g:i A', strtotime($submission['appeal_reviewed_at'])), ENT_QUOTES, 'UTF-8') ?></dd></div>
-                                    <?php endif; ?>
-                                    <div class="appeal-message"><dt>Your appeal</dt><dd><?= nl2br(htmlspecialchars($submission['appeal_message'], ENT_QUOTES, 'UTF-8')) ?></dd></div>
-                                    <?php if ($submission['appeal_admin_comment']): ?>
-                                        <div class="appeal-message"><dt>Admin comment</dt><dd><?= nl2br(htmlspecialchars($submission['appeal_admin_comment'], ENT_QUOTES, 'UTF-8')) ?></dd></div>
-                                        <div><dt>Comment updated</dt><dd><?= htmlspecialchars(date('M j, Y g:i A', strtotime($submission['appeal_comment_updated_at'])), ENT_QUOTES, 'UTF-8') ?></dd></div>
-                                    <?php endif; ?>
-                                <?php endif; ?>
-                                <div><dt>Location</dt><dd><?= htmlspecialchars($submission['location'], ENT_QUOTES, 'UTF-8') ?></dd></div>
-                                <div><dt>Crop type</dt><dd><?= htmlspecialchars($submission['crop_type'], ENT_QUOTES, 'UTF-8') ?></dd></div>
-                                <div><dt>No. of sacks</dt><dd><?= htmlspecialchars((string) $submission['sacks'], ENT_QUOTES, 'UTF-8') ?></dd></div>
-                                <div><dt>Total weight</dt><dd><?= htmlspecialchars((string) $submission['weight'], ENT_QUOTES, 'UTF-8') ?> <?= htmlspecialchars($submission['weight_unit'], ENT_QUOTES, 'UTF-8') ?></dd></div>
-                                <div><dt>Land size</dt><dd><?= htmlspecialchars((string) $submission['land_size'], ENT_QUOTES, 'UTF-8') ?> <?= htmlspecialchars($submission['land_unit'], ENT_QUOTES, 'UTF-8') ?></dd></div>
-                                <div><dt>Profit</dt><dd>₱<?= number_format((float) $submission['monthly_profit'], 2) ?></dd></div>
-                            </dl>
-                            <?php if (($submission['status'] ?? 'pending') === 'rejected' && $submission['appeal_status'] !== 'pending'): ?>
-                                <div class="appeal-form">
-                                    <label for="appeal-<?= (int) $submission['id'] ?>">Appeal this rejection</label>
-                                    <textarea id="appeal-<?= (int) $submission['id'] ?>" rows="4" maxlength="1000" placeholder="Explain why you believe this submission should be reviewed again."></textarea>
-                                    <button class="btn-appeal" type="button" onclick="submitAppeal(<?= (int) $submission['id'] ?>)">Submit appeal</button>
-                                </div>
-                            <?php endif; ?>
-                            <?php if (($submission['status'] ?? 'pending') === 'pending'): ?>
-                                <a class="btn-edit-submission" href="edit_submission.php?id=<?= (int) $submission['id'] ?>">Edit pending submission</a>
-                            <?php endif; ?>
+                            <div class="submission-summary">
+                                <span><?= htmlspecialchars($submission['location'], ENT_QUOTES, 'UTF-8') ?></span>
+                                <span>₱<?= number_format((float) $submission['monthly_profit'], 2) ?></span>
+                                <span class="status-<?= (int) $submission['is_paused'] === 1 ? 'paused' : htmlspecialchars($submission['status'] ?? 'pending', ENT_QUOTES, 'UTF-8') ?>"><?= (int) $submission['is_paused'] === 1 ? 'Approved (paused)' : htmlspecialchars(ucfirst($submission['status'] ?? 'pending'), ENT_QUOTES, 'UTF-8') ?></span>
+                            </div>
+                            <div class="submission-actions">
+                                <a class="btn-edit-submission" href="submission_detail.php?id=<?= (int) $submission['id'] ?>">View details</a>
+                            </div>
                         </article>
                     <?php endwhile; ?>
                 <?php endif; ?>

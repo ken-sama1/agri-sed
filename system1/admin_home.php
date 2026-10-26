@@ -142,70 +142,15 @@ if (!$reportResult) {
                         <?php $status = $submission['status'] ?? 'pending'; ?>
                         <article class="history-card" id="submission-<?= (int) $submission['id'] ?>">
                             <h2><?= htmlspecialchars($submission['username'], ENT_QUOTES, 'UTF-8') ?> — <?= htmlspecialchars($submission['crop_type'], ENT_QUOTES, 'UTF-8') ?></h2>
-                            <dl class="history-details">
-                                <div><dt>Submitted</dt><dd><?= $submission['submitted_at'] ? htmlspecialchars(date('M j, Y g:i A', strtotime($submission['submitted_at'])), ENT_QUOTES, 'UTF-8') : 'Not available' ?></dd></div>
-                                <div><dt>Status</dt><dd class="status-<?= htmlspecialchars($status, ENT_QUOTES, 'UTF-8') ?>" data-submission-status><?= htmlspecialchars(ucfirst($status), ENT_QUOTES, 'UTF-8') ?></dd></div>
-                                <div><dt>Reviewed</dt><dd data-reviewed-at><?= $submission['reviewed_at'] ? htmlspecialchars(date('M j, Y g:i A', strtotime($submission['reviewed_at'])), ENT_QUOTES, 'UTF-8') : 'Not reviewed' ?></dd></div>
-                                <?php if ($status === 'approved'): ?>
-                                    <div><dt>Benchmark</dt><dd class="<?= (int) $submission['is_paused'] === 1 ? 'status-paused' : 'status-approved' ?>"><?= (int) $submission['is_paused'] === 1 ? 'Paused' : 'Included' ?></dd></div>
-                                <?php endif; ?>
-                                <?php if ($submission['appeal_status']): ?>
-                                    <div><dt>Appeal status</dt><dd class="status-<?= htmlspecialchars($submission['appeal_status'], ENT_QUOTES, 'UTF-8') ?>"><?= htmlspecialchars(ucfirst($submission['appeal_status']), ENT_QUOTES, 'UTF-8') ?></dd></div>
-                                    <div><dt>Appeal submitted</dt><dd><?= htmlspecialchars(date('M j, Y g:i A', strtotime($submission['appeal_submitted_at'])), ENT_QUOTES, 'UTF-8') ?></dd></div>
-                                    <?php if ($submission['appeal_reviewed_at']): ?>
-                                        <div><dt>Appeal reviewed</dt><dd><?= htmlspecialchars(date('M j, Y g:i A', strtotime($submission['appeal_reviewed_at'])), ENT_QUOTES, 'UTF-8') ?></dd></div>
-                                    <?php endif; ?>
-                                    <div class="appeal-message"><dt>Appeal message</dt><dd><?= nl2br(htmlspecialchars($submission['appeal_message'], ENT_QUOTES, 'UTF-8')) ?></dd></div>
-                                    <?php if ($submission['appeal_admin_comment']): ?>
-                                        <div class="appeal-message"><dt>Admin comment</dt><dd><?= nl2br(htmlspecialchars($submission['appeal_admin_comment'], ENT_QUOTES, 'UTF-8')) ?></dd></div>
-                                        <div><dt>Comment updated</dt><dd><?= htmlspecialchars(date('M j, Y g:i A', strtotime($submission['appeal_comment_updated_at'])), ENT_QUOTES, 'UTF-8') ?></dd></div>
-                                    <?php endif; ?>
-                                <?php endif; ?>
-                                <div><dt>Location</dt><dd><?= htmlspecialchars($submission['location'], ENT_QUOTES, 'UTF-8') ?></dd></div>
-                                <div><dt>Crop type</dt><dd><?= htmlspecialchars($submission['crop_type'], ENT_QUOTES, 'UTF-8') ?></dd></div>
-                                <div><dt>No. of sacks</dt><dd><?= (int) $submission['sacks'] ?></dd></div>
-                                <div><dt>Total weight</dt><dd><?= htmlspecialchars((string) $submission['weight'], ENT_QUOTES, 'UTF-8') ?> <?= htmlspecialchars($submission['weight_unit'], ENT_QUOTES, 'UTF-8') ?></dd></div>
-                                <div><dt>Land size</dt><dd><?= htmlspecialchars((string) $submission['land_size'], ENT_QUOTES, 'UTF-8') ?> <?= htmlspecialchars($submission['land_unit'], ENT_QUOTES, 'UTF-8') ?></dd></div>
-                                <div><dt>Profit</dt><dd>₱<?= number_format((float) $submission['monthly_profit'], 2) ?></dd></div>
-                            </dl>
-                            <div class="submission-files">
-                                <?php foreach (['file_land' => 'Land title', 'file_crop' => 'Crop photo', 'file_payslip' => 'Payslip'] as $fileField => $fileLabel): ?>
-                                    <?php if ($submission[$fileField]): ?>
-                                        <a href="<?= htmlspecialchars($submission[$fileField], ENT_QUOTES, 'UTF-8') ?>" target="_blank" rel="noopener"><?= htmlspecialchars($fileLabel, ENT_QUOTES, 'UTF-8') ?></a>
-                                    <?php endif; ?>
-                                <?php endforeach; ?>
+                            <div class="submission-summary">
+                                <span><?= htmlspecialchars($submission['location'], ENT_QUOTES, 'UTF-8') ?></span>
+                                <span>₱<?= number_format((float) $submission['monthly_profit'], 2) ?></span>
+                                <span class="status-<?= htmlspecialchars($status, ENT_QUOTES, 'UTF-8') ?>" data-submission-status><?= htmlspecialchars(ucfirst($status), ENT_QUOTES, 'UTF-8') ?></span>
                             </div>
-                            <?php if ($status === 'pending'): ?>
-                                <div class="submission-actions">
-                                    <button class="btn-approve" onclick="reviewSubmission(<?= (int) $submission['id'] ?>, 'approved')">Accept</button>
-                                    <button class="btn-reject" onclick="reviewSubmission(<?= (int) $submission['id'] ?>, 'rejected')">Reject</button>
-                                </div>
-                            <?php endif; ?>
-                            <?php if ($status === 'approved'): ?>
-                                <div class="submission-actions">
-                                    <?php if ((int) $submission['is_paused'] === 1): ?>
-                                        <button class="btn-approve" type="button" onclick="manageSubmission(<?= (int) $submission['id'] ?>, 'resume')">Resume benchmarks</button>
-                                    <?php else: ?>
-                                        <button class="btn-sub" type="button" onclick="manageSubmission(<?= (int) $submission['id'] ?>, 'pause')">Pause benchmarks</button>
-                                    <?php endif; ?>
-                                </div>
-                            <?php endif; ?>
                             <div class="submission-actions">
-                                <button class="btn-delete" type="button" onclick="manageSubmission(<?= (int) $submission['id'] ?>, 'delete')">Delete submission</button>
+                                <a class="btn-edit-submission" href="submission_detail.php?id=<?= (int) $submission['id'] ?>">View details</a>
                             </div>
-                            <?php if ($submission['appeal_status'] === 'pending'): ?>
-                                <div class="submission-actions">
-                                    <button class="btn-approve" onclick="resolveAppeal(<?= (int) $submission['appeal_id'] ?>, 'accepted')">Accept appeal</button>
-                                    <button class="btn-reject" onclick="resolveAppeal(<?= (int) $submission['appeal_id'] ?>, 'denied')">Deny appeal</button>
-                                </div>
-                            <?php endif; ?>
-                            <?php if ($submission['appeal_status']): ?>
-                                <div class="appeal-form">
-                                    <label for="appeal-comment-<?= (int) $submission['appeal_id'] ?>">Admin comment on appeal</label>
-                                    <textarea id="appeal-comment-<?= (int) $submission['appeal_id'] ?>" rows="3" maxlength="2000"><?= htmlspecialchars($submission['appeal_admin_comment'] ?? '', ENT_QUOTES, 'UTF-8') ?></textarea>
-                                    <button type="button" onclick="saveAdminComment('appeal', <?= (int) $submission['appeal_id'] ?>)">Save appeal comment</button>
-                                </div>
-                            <?php endif; ?>
+                            <span class="submission-card-date">Submitted <?= $submission['submitted_at'] ? htmlspecialchars(date('M j, Y', strtotime($submission['submitted_at'])), ENT_QUOTES, 'UTF-8') : 'date unavailable' ?></span>
                         </article>
                     <?php endwhile; ?>
                 <?php endif; ?>
@@ -267,12 +212,29 @@ if (!$reportResult) {
                                 <div><dt>Submissions</dt><dd><?= (int) $farmer['submissions'] ?></dd></div>
                                 <div><dt>Approved</dt><dd><?= (int) $farmer['approved'] ?></dd></div>
                             </dl>
+                            <button class="btn-edit-submission" type="button" onclick="openPasswordReset(<?= (int) $farmer['id'] ?>, <?= htmlspecialchars(json_encode($farmer['username']), ENT_QUOTES, 'UTF-8') ?>)">Reset password</button>
                         </article>
                     <?php endwhile; ?>
                 <?php endif; ?>
             </div>
         </section>
     </div>
+    <dialog id="password-reset-dialog" class="password-reset-dialog">
+        <form id="password-reset-form" onsubmit="resetUserPassword(event)">
+            <h2>Reset user password</h2>
+            <p id="password-reset-username"></p>
+            <input type="hidden" id="password-reset-user-id">
+            <label for="new-user-password">New password</label>
+            <input id="new-user-password" type="password" minlength="8" required autocomplete="new-password" pattern="(?=(?:[^A-Za-z]*[A-Za-z]){6})(?=.*[0-9]).{8,}" title="At least 8 characters, including 6 letters and 1 number.">
+            <label for="confirm-user-password">Confirm new password</label>
+            <input id="confirm-user-password" type="password" minlength="8" required autocomplete="new-password">
+            <div class="dialog-actions">
+                <button class="btn-sub" type="button" onclick="closePasswordReset()">Cancel</button>
+                <button class="btn-main" type="submit">Change password</button>
+            </div>
+            <p id="password-reset-message" role="status"></p>
+        </form>
+    </dialog>
     <script src="script.js"></script>
 </body>
 </html>

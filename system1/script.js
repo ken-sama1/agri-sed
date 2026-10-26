@@ -8,23 +8,50 @@ window.onload = function () {
 };
 
 function setRole(role) {
+  const roleChanged = role !== currentRole;
   currentRole = role;
   const adminBtn = document.getElementById("adminBtn");
   const userBtn = document.getElementById("userBtn");
   const workerIdField = document.getElementById("workerId");
+  const workerIdLabel = document.getElementById("workerIdLabel");
+  const confirmPasswordField = document.getElementById("confirmPassword");
+  const confirmPasswordLabel = document.getElementById("confirmPasswordLabel");
   const authTitle = document.getElementById("authTitle");
+  const signupButton = document.querySelector(".btn-signup");
+  const formFields = document.querySelectorAll(
+    "#username, #workerId, #password, #confirmPassword",
+  );
+
+  if (roleChanged) {
+    formFields.forEach((field) => {
+      field.value = "";
+      field.setCustomValidity("");
+    });
+  }
 
   if (adminBtn && userBtn) {
     if (role === "admin") {
       adminBtn.classList.add("active-admin");
       userBtn.classList.remove("active");
+      adminBtn.setAttribute("aria-selected", "true");
+      userBtn.setAttribute("aria-selected", "false");
       if (workerIdField) workerIdField.classList.remove("hidden");
-      if (authTitle) authTitle.innerText = "Agri Head Registration";
+      if (workerIdLabel) workerIdLabel.classList.remove("hidden");
+      if (confirmPasswordField) confirmPasswordField.classList.add("hidden");
+      if (confirmPasswordLabel) confirmPasswordLabel.classList.add("hidden");
+      if (signupButton) signupButton.classList.add("hidden");
+      if (authTitle) authTitle.innerText = "Admin Portal";
     } else {
       userBtn.classList.add("active");
       adminBtn.classList.remove("active-admin");
+      userBtn.setAttribute("aria-selected", "true");
+      adminBtn.setAttribute("aria-selected", "false");
       if (workerIdField) workerIdField.classList.add("hidden");
-      if (authTitle) authTitle.innerText = "Farmer Registration";
+      if (workerIdLabel) workerIdLabel.classList.add("hidden");
+      if (confirmPasswordField) confirmPasswordField.classList.remove("hidden");
+      if (confirmPasswordLabel) confirmPasswordLabel.classList.remove("hidden");
+      if (signupButton) signupButton.classList.remove("hidden");
+      if (authTitle) authTitle.innerText = "Farmer Portal";
     }
   }
 }
@@ -38,6 +65,36 @@ function validateUsername(username) {
 function validateWorkerId(id) {
   return /^\d{2}-\d{4}-\d{6}$/.test(id);
 }
+
+document.addEventListener("keydown", (event) => {
+  if (
+    event.target instanceof HTMLInputElement &&
+    event.target.type === "number" &&
+    ["e", "E"].includes(event.key)
+  ) {
+    event.preventDefault();
+  }
+});
+
+document.addEventListener("beforeinput", (event) => {
+  if (
+    event.target instanceof HTMLInputElement &&
+    event.target.type === "number" &&
+    /[eE]/.test(event.data || "")
+  ) {
+    event.preventDefault();
+  }
+});
+
+document.addEventListener("paste", (event) => {
+  if (
+    event.target instanceof HTMLInputElement &&
+    event.target.type === "number" &&
+    /[eE]/.test(event.clipboardData?.getData("text") || "")
+  ) {
+    event.preventDefault();
+  }
+});
 function showSubmissionToast(message, type) {
   let toast = document.getElementById("submission-toast");
   if (!toast) {
@@ -53,6 +110,59 @@ function showSubmissionToast(message, type) {
   toast.setAttribute("role", type === "success" ? "status" : "alert");
   window.clearTimeout(showSubmissionToast.timeoutId);
   showSubmissionToast.timeoutId = window.setTimeout(() => toast.remove(), 5000);
+}
+
+function openPasswordReset(userId, username) {
+  const dialog = document.getElementById("password-reset-dialog");
+  document.getElementById("password-reset-form").reset();
+  document.getElementById("password-reset-user-id").value = String(userId);
+  document.getElementById("password-reset-username").textContent =
+    `Set a new password for ${username}.`;
+  document.getElementById("password-reset-message").textContent = "";
+  dialog.showModal();
+}
+
+function closePasswordReset() {
+  document.getElementById("password-reset-dialog").close();
+}
+
+async function resetUserPassword(event) {
+  event.preventDefault();
+  const form = document.getElementById("password-reset-form");
+  if (!form.reportValidity()) return;
+  const password = document.getElementById("new-user-password").value;
+  const confirmation = document.getElementById("confirm-user-password").value;
+  if (password !== confirmation) {
+    document.getElementById("password-reset-message").textContent =
+      "Passwords do not match.";
+    return;
+  }
+
+  const button = form.querySelector('button[type="submit"]');
+  const formData = new FormData();
+  formData.append(
+    "user_id",
+    document.getElementById("password-reset-user-id").value,
+  );
+  formData.append("password", password);
+  button.disabled = true;
+  try {
+    const response = await fetch("reset_user_password.php", {
+      method: "POST",
+      body: formData,
+    });
+    const result = await response.json();
+    if (!response.ok) {
+      throw new Error(result.error || "Unable to reset user password.");
+    }
+    closePasswordReset();
+    showSubmissionToast("User password updated.", "success");
+  } catch (error) {
+    document.getElementById("password-reset-message").textContent =
+      error.message;
+  } finally {
+    button.disabled = false;
+  }
 }
 
 async function handleSignup() {
@@ -283,7 +393,10 @@ async function reviewSubmission(id, status) {
   if (status === "rejected" && !window.confirm("Reject this submission?"))
     return;
   const card = document.getElementById(`submission-${id}`);
-  const buttons = card?.querySelectorAll(".submission-actions button");
+  const reviewActions = card
+    ?.querySelector(".submission-actions .btn-approve")
+    ?.closest(".submission-actions");
+  const buttons = reviewActions?.querySelectorAll("button");
   if (!card || !buttons || !["approved", "rejected"].includes(status)) return;
   buttons.forEach((button) => (button.disabled = true));
 
@@ -311,7 +424,7 @@ async function reviewSubmission(id, status) {
     if (reviewedAtElement) {
       reviewedAtElement.textContent = result.reviewed_at_display;
     }
-    card.querySelector(".submission-actions")?.remove();
+    reviewActions.remove();
     const pendingCount = document.getElementById("statPending");
     const approvedCount = document.getElementById("statApproved");
     if (pendingCount) {
@@ -388,6 +501,32 @@ async function submitAppeal(submissionId) {
     window.location.reload();
   } catch (error) {
     alert(`Error: ${error.message}`);
+  }
+}
+
+async function cancelSubmission(submissionId) {
+  if (
+    !window.confirm(
+      "Cancel this pending submission? It will remain in your history as cancelled.",
+    )
+  ) {
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("submission_id", String(submissionId));
+  try {
+    const response = await fetch("cancel_submission.php", {
+      method: "POST",
+      body: formData,
+    });
+    const result = await response.json();
+    if (!response.ok) {
+      throw new Error(result.error || "Unable to cancel submission.");
+    }
+    window.location.href = "user_home.php?section=history";
+  } catch (error) {
+    showSubmissionToast(error.message, "error");
   }
 }
 
