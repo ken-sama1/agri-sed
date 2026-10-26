@@ -8,6 +8,10 @@ appeal, report, attachment, comment, and submission-pause features. Do not run
 the migration files on a database created from this setup script; those files
 are retained for upgrading older installations.
 
+Existing installations should also apply
+[`system1/migrations/20261026_add_cancelled_submission_status.sql`](system1/migrations/20261026_add_cancelled_submission_status.sql)
+to enable farmers to cancel pending submissions.
+
 The PHP app currently connects to MySQL using the settings in
 [`system1/db.php`](system1/db.php). Update those settings to match the host's
 database credentials before deployment, and configure PHP to persist uploaded

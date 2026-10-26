@@ -28,7 +28,7 @@ CREATE TABLE farmer_submissions (
     file_land VARCHAR(255) DEFAULT NULL,
     file_crop VARCHAR(255) DEFAULT NULL,
     file_payslip VARCHAR(255) DEFAULT NULL,
-    status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
+    status ENUM('pending', 'approved', 'rejected', 'cancelled') DEFAULT 'pending',
     submitted_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     is_flagged TINYINT(1) NOT NULL DEFAULT 0,
     reviewed_at TIMESTAMP NULL DEFAULT NULL,
